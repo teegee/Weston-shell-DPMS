@@ -16,8 +16,6 @@ dir_lib = dir_prefix / get_option('libdir')
 dir_executable_weston = dir_bin
 dir_module_weston = dir_lib / 'weston'
 
-dir_system_include = '/usr/include'
-
 weston = dependency('libweston-@0@'.format(libweston_version), method: 'pkg-config')
 wayland_server = dependency('wayland-server', method: 'pkg-config')
 wayland_client = dependency('wayland-client', method: 'pkg-config')
@@ -52,8 +50,7 @@ shared_library(
   dependencies: [weston, wayland_server, pix],
   name_prefix: '',
   install: true,
-  install_dir: dir_module_weston,
-  include_directories: ['@0@/libweston-@1@'.format(dir_system_include, libweston_version), '@0@/pixman-1'.format(dir_system_include)]
+  install_dir: dir_module_weston
 )
 
 executable(
