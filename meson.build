@@ -6,7 +6,17 @@ if get_option('buildtype') == 'debug'
   add_project_arguments('-DDEBUG', language: ['c', 'cpp'])
 endif
 
-libweston_version = 10
+foreach v : ['14', '13', '12', '11', '10']
+  libweston_dep = dependency(
+    'libweston-' + v,
+    method: 'pkg-config',
+    required: false
+  )
+  if libweston_dep.found()
+    libweston_version = v
+    break
+  endif
+endforeach
 
 dir_prefix = get_option('prefix')
 
@@ -16,7 +26,7 @@ dir_lib = dir_prefix / get_option('libdir')
 dir_executable_weston = dir_bin
 dir_module_weston = dir_lib / 'weston'
 
-weston = dependency('libweston-@0@'.format(libweston_version), method: 'pkg-config')
+weston = libweston_dep
 wayland_server = dependency('wayland-server', method: 'pkg-config')
 wayland_client = dependency('wayland-client', method: 'pkg-config')
 pix = dependency('pixman-1', method : 'pkg-config')
